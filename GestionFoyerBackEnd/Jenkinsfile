@@ -1,0 +1,173 @@
+pipeline {
+    agent any
+    environment{
+        NEXUS_VERSION="nexus3"
+        NEXUS_PROTOCOL="http"
+        NEXUS_URL="localhost:8081"
+        NEXUS_CREDENTIAL_ID="nexus"
+        
+    }
+    stages {
+        stage("compiling"){
+            steps{
+                dir('GestionFoyerBackEnd') {
+                script {
+                    sh "mvn clean compile"
+    }
+}
+            }
+        }
+         stage('Test') {
+            steps {
+               dir('GestionFoyerBackEnd') {
+                // Run JUnit tests with Maven
+                sh 'mvn test'
+            }
+            }
+            post {
+                always {
+                     dir('GestionFoyerBackEnd') {
+                         sh 'pwd'
+                         sh 'ls -l target/'
+                     junit 'target/surefire-reports/TEST-*.xml'
+                   
+                }
+            }
+            }
+        }
+      stage("sonarqube analysis"){
+            steps{
+                dir('GestionFoyerBackEnd') {
+                script {
+                    jacoco()
+                    withSonarQubeEnv('sonar'){
+                        sh "mvn verify sonar:sonar"
+                    }
+                }
+                }
+            }
+        }
+
+         stage("Quality Gate") {
+            steps {
+                script {
+                    sleep(10)
+                    timeout(time: 1, unit: 'HOURS') {
+                        def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
+         }
+        
+        stage("building jar"){
+            steps{
+                dir('GestionFoyerBackEnd') {
+                script {
+                    sh "mvn package"
+                }
+                }
+            }
+        }
+        stage('Nexus') {
+            steps {
+                dir('GestionFoyerBackEnd') {
+                    script {
+                        artifactPath = 'target/GestionFoyerBackEnd-0.0.1-SNAPSHOT.jar'
+
+                        nexusArtifactUploader(
+                            nexusVersion: 'nexus3',
+                            protocol: 'http',
+                            nexusUrl: 'localhost:8081',
+                            groupId: 'tn.esprit',
+                            version: '1.0',
+                            repository: 'maven-releases',
+                            credentialsId: 'nexus',
+                            artifacts: [
+                                    [artifactId: 'GestionFoyerBackEnd',
+                                     classifier: '',
+                                     file      : artifactPath,
+                                     type      : 'jar']
+                            ]
+                    )
+                    }
+                }
+            }
+        }
+        stage('Build and deploy backend docker image') {
+            steps {
+                dir('GestionFoyerBackEnd') {
+                    script {
+                        echo "Building and deploying backend docker image"
+                        withCredentials([usernamePassword(credentialsId: "dockerhub", usernameVariable:"USER", passwordVariable:"PWD")]){
+                            sh "echo $PWD | docker login -u $USER --password-stdin" 
+                            sh "docker build -t emnaboukeri02/gestionfoyer:1.0 ."
+                            sh "docker push emnaboukeri02/gestionfoyer:1.0 "
+                        }
+                    }
+                }
+            }
+        }
+        stage('Build and deploy frontend docker image') {
+            steps {
+                dir('GestionFoyerFrontEnd') {
+                    script {
+                        echo "Building and deploying front docker image"
+                        withCredentials([usernamePassword(credentialsId: "dockerhub", usernameVariable:"USER", passwordVariable:"PWD")]){
+                            sh "echo $PWD | docker login -u $USER --password-stdin" 
+                            sh "docker build -t emnaboukeri02/gestionfoyerfront:1.0 ."
+                            sh "docker push emnaboukeri02/gestionfoyerfront:1.0 "
+                        }
+                    }
+                }
+            }
+        }
+         stage('Run Docker Compose') {
+            steps {
+                echo 'Running Docker Compose...'
+                sh 'docker compose up -d'
+            }
+        }
+
+
+         stage('Check and Start Prometheus') {
+    steps {
+        script {
+            def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep prometheus", returnStatus: true)
+            if (containerExists != 0) {
+                echo "Container does not exist. Starting Prometheus container..."
+                sh "docker run -d -p 9090:9090 --name prometheus prom/prometheus"
+            } else {
+                echo "Container already exists. Stopping and restarting..."
+                sh "docker stop prometheus"
+                sleep 5 // Wait for 5 seconds
+                sh "docker start prometheus"
+            }
+        }
+    }
+}
+
+    stage('Check and Start Grafana') {
+    steps {
+        script {
+            def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep grafana", returnStatus: true)
+            if (containerExists != 0) {
+                echo "Grafana Container does not exist. Starting Grafana container..."
+                sh "docker run -d -p 3000:3000 --name grafana grafana/grafana"
+            } else {
+                echo "Grafana Container already exists. Stopping and restarting..."
+                sh "docker stop grafana"
+                sleep 5 // Wait for 5 seconds
+                sh "docker start grafana"
+            }
+        }
+    }
+}
+
+      
+                
+    }
+}
+    

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: 'foyerdb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'rootpassword'
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  app:
+    image: emnaboukeri02/gestionfoyer:1.0
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/foyerdb
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - db
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+  angular-app:
+    image: emnaboukeri02/gestionfoyerfront:1.0
+    ports:
+      - "4200:80"
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:

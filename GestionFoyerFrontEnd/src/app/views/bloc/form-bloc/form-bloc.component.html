@@ -1,0 +1,42 @@
+<div class="content-wrapper">
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">{{getButtonMessage()}}</h4>
+
+      <!-- Basic Layout -->
+      <div class="row">
+        <div class="col-xl">
+          <div class="card mb-4">
+            <div class="card-body">
+                <form #blocForm="ngForm" (ngSubmit)="onSubmit(blocForm)">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom Bloc</label>
+                        <input type="text" class="form-control" id="nomBloc" name="nomBloc" [(ngModel)]="bloc.nomBloc" #nomBloc="ngModel" required minlength="3" pattern="[a-zA-Z]*">
+                        <div class="alert alert-danger" *ngIf="nomBloc.invalid && (nomBloc.touched || nomBloc.dirty)">
+                            <div *ngIf="nomBloc.errors!['required']">Nom Bloc is required </div>
+                            <div *ngIf="nomBloc.errors!['minlength']">Nom Bloc must have at least 3 characters !</div>
+                            <div *ngIf="nomBloc.errors!['pattern']">Nom Bloc invalid !</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="capaciteBloc" class="form-label">Capacité du Bloc</label>
+                        <input type="number" class="form-control" id="capaciteBloc" name="capaciteBloc" [(ngModel)]="bloc.capaciteBloc" required #capaciteBloc="ngModel" required minlength="1" pattern="[0-9]*">
+                        <div class="alert alert-danger" *ngIf="capaciteBloc.invalid && (capaciteBloc.touched || capaciteBloc.dirty)">
+                            <div *ngIf="capaciteBloc.errors!['required']">capacite Bloc is required </div>
+                            <div *ngIf="capaciteBloc.errors!['minlength']">capacite Bloc must have at least 3 characters !</div>
+                            <div *ngIf="capaciteBloc.errors!['pattern']">capacite Bloc invalid !</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                          <input type="submit" class="btn btn-primary" [value]="getButtonMessage()" [disabled]="blocForm.invalid">
+                        </div>
+                        <div>
+                          <a routerLink="/bloc/list" class="btn btn-primary">Return</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+        </div>

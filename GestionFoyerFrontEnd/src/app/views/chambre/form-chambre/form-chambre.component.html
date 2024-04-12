@@ -1,0 +1,49 @@
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <h4 class="fw-bold py-3 mb-4">{{ getButtonMessage() }}</h4>
+  
+      <!-- Basic Layout -->
+      <div class="row">
+        <div class="col-xl">
+          <div class="card mb-4">
+            <div class="card-body">
+              <form #chambreForm="ngForm" (ngSubmit)="onSubmit(chambreForm)">
+                <div class="mb-3">
+                  <label for="numChambre" class="form-label">Num Chambre</label>
+                  <input type="text" class="form-control" id="numChambre" name="numChambre" [(ngModel)]="chambre.numeroChambre" #numChambre="ngModel" required minlength="1" pattern="[0-9]*">
+                  <app-error [control]="numChambre.control" [name]="numChambre.name"></app-error>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="typeChambre" class="form-label">Type de Chambre</label>
+                  <select [(ngModel)]="chambre.type" id="typeChambre" name="typeChambre" #typeChambre="ngModel" class="form-select" required>
+                    <option *ngFor="let type of chambreTypes" [value]="type">{{ type }}</option>
+                  </select>
+                  <app-error [control]="typeChambre.control" [name]="typeChambre.name"></app-error>
+                </div>
+  
+                <div class="mb-3">
+                    <label for="blocChambre" class="form-label">Affecter à un Bloc</label>
+                    <select [(ngModel)]="selectedBloc" id="blocChambre" name="blocChambre" #blocChambre="ngModel" class="form-select" required >
+                      <option value="null">Vide</option>
+                      <option *ngFor="let bloc of blocs" [value]="bloc.nomBloc">{{ bloc.nomBloc }}</option>
+                    </select>
+                    <app-error [control]="blocChambre.control" [name]="blocChambre.name"></app-error>
+                  </div>
+  
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex">
+                    <input type="submit" class="btn btn-primary" [value]="getButtonMessage()" [disabled]="chambreForm.invalid">
+                  </div>
+                  <div>
+                    <a routerLink="/chambre/list" class="btn btn-primary">Retour</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
