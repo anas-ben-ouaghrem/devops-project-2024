@@ -1,13 +1,19 @@
 FROM node:20.11.1-alpine3.19 as angular
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . /usr/src/app
+COPY package.json package-lock.json ./
+RUN npm install
 
-RUN rm -rf node_modules
+COPY . .
+RUN npm run build -- --prod
 
-RUN npm install -g @angular/cli
+# Stage 2: Serve Angular application with Nginx
+FROM nginx:alpine
 
-RUN npm install --legacy-peer-deps
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
