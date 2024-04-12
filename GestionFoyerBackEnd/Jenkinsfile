@@ -103,8 +103,8 @@ pipeline {
                         echo "Building and deploying backend docker image"
                         withCredentials([usernamePassword(credentialsId: "dockerhub", usernameVariable:"USER", passwordVariable:"PWD")]){
                             sh "echo $PWD | docker login -u $USER --password-stdin" 
-                            sh "docker build -t emnaboukeri02/gestionfoyer:1.0 ."
-                            sh "docker push emnaboukeri02/gestionfoyer:1.0 "
+                            sh "docker build -t anasbenouaghrem/gestionfoyer:1.0 ."
+                            sh "docker push anasbenouaghrem/gestionfoyer:1.0 "
                         }
                     }
                 }
@@ -117,8 +117,8 @@ pipeline {
                         echo "Building and deploying front docker image"
                         withCredentials([usernamePassword(credentialsId: "dockerhub", usernameVariable:"USER", passwordVariable:"PWD")]){
                             sh "echo $PWD | docker login -u $USER --password-stdin" 
-                            sh "docker build -t emnaboukeri02/gestionfoyerfront:1.0 ."
-                            sh "docker push emnaboukeri02/gestionfoyerfront:1.0 "
+                            sh "docker build -t anasbenouaghrem/gestionfoyerfront:1.0 ."
+                            sh "docker push anasbenouaghrem/gestionfoyerfront:1.0 "
                         }
                     }
                 }
