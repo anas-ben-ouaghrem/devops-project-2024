@@ -9,7 +9,7 @@ services:
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "rootpassword"
     ports:
-      - "3306:3306"
+      - "3308:3306"
     volumes:
       - db-data:/var/lib/mysql
     networks:
@@ -18,7 +18,7 @@ services:
   app:
     image: anasbenouaghrem/gestionfoyer:1.0
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/foyerdb
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3308/foyerdb
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
     depends_on:
