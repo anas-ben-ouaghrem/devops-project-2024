@@ -1,4 +1,4 @@
-FROM node:20.11.1-alpine3.19 as angular
+FROM node:20.11.1-alpine3.19 as builder
 
 WORKDIR /app
 
