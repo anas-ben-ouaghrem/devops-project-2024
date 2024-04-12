@@ -89,4 +89,20 @@ class EtudiantServiceTest {
         assertFalse(result.isEmpty());
         verify(etudiantRepository).findByNomEtOrPrenomEtOrCinOrEcole(anyString(), anyString(), anyLong(), anyString());
     }
+
+    @Test
+    public void testStatistiques() {
+        // Arrange
+        when(etudiantRepository.count()).thenReturn(100L);
+        when(etudiantRepository.findByReservationset_EstValide(true)).thenReturn(Arrays.asList(new Etudiant(), new Etudiant()));
+        when(etudiantRepository.findByReservationset_EstValide(false)).thenReturn(Arrays.asList(new Etudiant()));
+
+        // Act
+        Map<String, String> statistiques = etudiantService.Statistiques();
+
+        // Assert
+        assertEquals("2%", statistiques.get("countReservation"));
+        assertEquals("1%", statistiques.get("countNonReservation"));
+        assertEquals("100", statistiques.get("countTotal"));
+    }
 }
