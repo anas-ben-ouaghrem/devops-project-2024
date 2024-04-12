@@ -1,13 +1,13 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_DATABASE: 'foyerdb'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'rootpassword'
+      MYSQL_DATABASE: "foyerdb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
     ports:
       - "3306:3306"
     volumes:
@@ -24,7 +24,7 @@ services:
     depends_on:
       - db
     ports:
-      - "9090:9090"
+      - "8082:8082"
     networks:
       - app-network
 
