@@ -9,7 +9,7 @@ import tn.esprit.twin.springboot.service.EtudiantService;
 import java.util.List;
 import java.util.Map;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/Etudiant")
 public class EtudiantController {

@@ -12,7 +12,7 @@ import tn.esprit.twin.springboot.service.TwilioService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:4201", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("bloc")
 public class BlocController {

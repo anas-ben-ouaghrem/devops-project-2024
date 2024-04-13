@@ -11,7 +11,7 @@ import tn.esprit.twin.springboot.service.IFoyerService;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/foyer")
 public class FoyerController {

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin(origins = {"http://localhost:4201", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 @RequestMapping("chambre")

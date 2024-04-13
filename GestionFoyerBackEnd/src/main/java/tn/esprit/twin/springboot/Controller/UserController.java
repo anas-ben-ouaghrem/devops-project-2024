@@ -6,6 +6,8 @@ import tn.esprit.twin.springboot.entity.User;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/users")

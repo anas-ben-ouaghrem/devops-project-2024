@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:4201", "http://localhost:4200"})
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("reservation/")
 public class ReservationController {

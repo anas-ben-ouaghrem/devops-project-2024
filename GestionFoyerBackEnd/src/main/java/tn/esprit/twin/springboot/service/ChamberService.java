@@ -89,12 +89,19 @@ public class ChamberService implements  IChamberService {
         long countParTypeDOUBLE = chambreRepositorys.countChambresByTypeC(TypeChambre.DOUBLE);
         long countParTypeTRIPLE = chambreRepositorys.countChambresByTypeC(TypeChambre.TRIPLE);
         Map<String, Long> roomStatisticsSet = new HashMap<>();
-
-        roomStatisticsSet.put("Le nombre total des chambres est :" , nbch);
-        roomStatisticsSet.put("Le pourcentage des chambres de type SIMPLE est :" ,(countParTypeSIMPLE*100)/nbch);
-        roomStatisticsSet.put("Le pourcentage des chambres de type DOUBLE est :" ,(countParTypeDOUBLE*100)/nbch);
-        roomStatisticsSet.put("Le pourcentage des chambres de type TRIPLE est :" ,(countParTypeTRIPLE*100)/nbch);
-
+        if (nbch != 0) {
+            roomStatisticsSet.put("Le nombre total des chambres est :", nbch);
+            roomStatisticsSet.put("Le pourcentage des chambres de type SIMPLE est :", (countParTypeSIMPLE * 100) / nbch);
+            roomStatisticsSet.put("Le pourcentage des chambres de type DOUBLE est :", (countParTypeDOUBLE * 100) / nbch);
+            roomStatisticsSet.put("Le pourcentage des chambres de type TRIPLE est :", (countParTypeTRIPLE * 100) / nbch);
+        }
+        else
+        {
+            roomStatisticsSet.put("Le nombre total des chambres est :" , nbch);
+            roomStatisticsSet.put("Le pourcentage des chambres de type SIMPLE est :" ,0L);
+            roomStatisticsSet.put("Le pourcentage des chambres de type DOUBLE est :" ,0L);
+            roomStatisticsSet.put("Le pourcentage des chambres de type TRIPLE est :" ,0L);
+        }
         return roomStatisticsSet;
 
     }
