@@ -14,7 +14,8 @@
     <name>GestionFoyerBackEnd</name>
     <description>GestionFoyerBackEnd</description>
     <properties>
-        <java.version>17</java.version>
+         <java.version>17</java.version>
+         <jacoco.version>0.8.8</jacoco.version>
     </properties>
     <dependencies>
         <dependency>
