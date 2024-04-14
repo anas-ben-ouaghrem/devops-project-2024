@@ -19,8 +19,6 @@ pipeline {
             post {
                 always {
                     dir('GestionFoyerBackEnd') {
-                        sh 'pwd'
-                        sh 'ls -l target/'
                         junit 'target/surefire-reports/TEST-*.xml'
                     }
                 }
