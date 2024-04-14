@@ -138,7 +138,7 @@ pipeline {
             def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep prometheus", returnStatus: true)
             if (containerExists != 0) {
                 echo "Container does not exist. Starting Prometheus container..."
-                sh "docker run -d -p 9090:9090 --name prometheus prom/prometheus"
+                sh "docker run -d -p 9090:9090 --network host --name prometheus prom/prometheus"
             } else {
                 echo "Container already exists. Stopping and restarting..."
                 sh "docker stop prometheus"
@@ -155,7 +155,7 @@ pipeline {
             def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep grafana", returnStatus: true)
             if (containerExists != 0) {
                 echo "Grafana Container does not exist. Starting Grafana container..."
-                sh "docker run -d -p 3000:3000 --name grafana grafana/grafana"
+                sh "docker run -d -p 3000:3000 --network host --name grafana grafana/grafana"
             } else {
                 echo "Grafana Container already exists. Stopping and restarting..."
                 sh "docker stop grafana"
