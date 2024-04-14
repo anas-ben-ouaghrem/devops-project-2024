@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql-service:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'foyerdb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'rootpassword'
+    volumes:
+      - mysql-persistent-storage:/var/lib/mysql
+    networks:
+      - backend-network
+
+  backend-service:
+    image: anasbenouaghrem/gestionfoyer:1.0
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql-service:3306/foyerdb?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
+      SPRING_DATASOURCE_USERNAME: 'user'
+      SPRING_DATASOURCE_PASSWORD: 'password'
+    depends_on:
+      - mysql-service
+    ports:
+      - '8085:8082'
+    networks:
+      - backend-network
+
+  frontend-service:
+    image: anasbenouaghrem/gestionfoyerfront:1.0
+    restart: always
+    ports:
+      - '4200:80'
+    networks:
+      - backend-network
+
+volumes:
+  mysql-persistent-storage:
+    driver: local
+
+networks:
+  backend-network:
+    driver: bridge
